@@ -1,0 +1,142 @@
+---
+title: "Conditional statements"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# TASK: Categorize penguins in three categories based on their body mass, and analyze the distribution of different categories.
+
+Load the packages:
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+```
+
+Your Goal: 
+
+Create a new column `mass_category` in the penguins dataset to categorize penguins based on their body mass, using the variable `body_mass_g` variable. If `body_mass_g` is:
+* greater than 5000, label it as "Large"
+* between 4000 and 5000 (inclusive), label it as "Medium"
+* less than 4000, label it as "Small"
+
+Then use `group_by` to group the data by `mass_category` and `summarize()` the average flipper length (variable `flipper_length_mm`) for each mass category.
+
+
+## Answer the prompt using functions we already know: `case_when()`
+
+Use `dplyr` functions `mutate()` and `case_when()` to create the new `mass_category` variable. Once ou are done, rewise the code to add an additional condition to check for missing data in `body_mass_g`, and set them to NA as `NA_Character_` in the new `mass_category` variable
+```{r}
+penguins %>%
+  mutate(
+    mass_category = case_when(
+      is.na(body_mass_g) ~ NA_character_,             
+      body_mass_g > 5000 ~ "Large",
+      body_mass_g >= 4000 & body_mass_g <= 5000 ~ "Medium",
+      body_mass_g < 4000 ~ "Small"
+    )
+  ) %>%
+  group_by(mass_category) %>%
+  summarize(
+    avg_flipper_length = mean(flipper_length_mm, na.rm = TRUE)
+  )
+```
+
+
+## Answer the prompt using new concepts from today: `ifelse()` function
+
+Remember the syntax from the slides:
+```
+ifelse (condition to be evaluated,
+    action performed when condition is TRUE,
+    action performed when condition is FALSE)
+```
+
+Solution without checking for NA:
+```{r}
+penguins %>%
+  mutate(mass_category = "Small") %>% # count(mass_category)
+  mutate(mass_category = ifelse(body_mass_g >= 4000 & body_mass_g <= 5000, 
+                                "Medium",
+                                mass_category)) %>%
+  mutate(mass_category = ifelse(body_mass_g > 5000, 
+                                "Large",
+                                mass_category)) %>%
+  group_by(mass_category) %>%
+  summarize(avg_flipper_length = mean(flipper_length_mm, na.rm = TRUE))
+```
+
+Solution checking for NA:
+```{r}
+penguins %>%
+  mutate(mass_category = ifelse(is.na(body_mass_g), 
+                                NA_character_, 
+                                "Small")) %>%
+  mutate(mass_category = ifelse(body_mass_g >= 4000 & body_mass_g <= 5000, 
+                                "Medium", 
+                                mass_category)) %>%
+  mutate(mass_category = ifelse(body_mass_g > 5000, 
+                                "Large", 
+                                mass_category)) %>%
+  group_by(mass_category) %>%
+  summarize(avg_flipper_length = mean(flipper_length_mm, na.rm = TRUE))
+```
+
+Solution with nested `if_else()` (NOT recommended!):
+```{r}
+penguins %>%
+  mutate(mass_category = ifelse(body_mass_g > 5000, "Large",
+                                ifelse(body_mass_g >= 4000, "Medium", "Small"))) %>%
+  group_by(mass_category) %>%
+  summarize(avg_flipper_length = mean(flipper_length_mm, na.rm = TRUE))
+```
+
+
+
+## Answer the prompt using using new concepts from today: write a set of `if-else` statements
+
+In this case, at the top of your code you need to use `rowwise()` to make sure your if and else statements apply to a dataframe or, more specifically, to each of single row of the dataframe. In practice, `rowwise()` will force R to process each row individually (e.g., to consider each individual row as its own group). The code works like that:
+```{r}
+penguins %>%
+  rowwise() %>%
+  mutate(
+    # add your if and else statements here
+  )
+```
+
+Solution (must include check for NA at the top):
+```{r}
+penguins %>%
+  rowwise() %>%
+  mutate(
+    mass_category = if (is.na(body_mass_g)) {
+      NA_character_
+    } else if (body_mass_g > 5000) {
+      "Large"
+    } else if (body_mass_g >= 4000 & body_mass_g <= 5000) {
+      "Medium"
+    } else {
+      "Small"
+    }
+  ) %>%
+  ungroup() %>%
+  group_by(mass_category) %>%
+  summarize(
+    avg_flipper_length = mean(flipper_length_mm, na.rm = TRUE)
+  )
+```
+
+## KEY DIFFERENCE BETWEEN THESE APPROACHES:
+
+* `case_when()` and `ifelse()`: vectorized, meaning they evaluate a given condition over all elements (rows) of an entire column or variable (e.g. a vector) at the same time!
+
+* if / else statements: not vectorized, meaning they evaluate a given condition one element at a time! So to apply them to a dataframe, you need to use a for loop or other tricks (such as `rowwise()`, like we did here) to evaluate each element (row) of the variable individually
+
+
+## TAKE HOME:
+
+1. `case_when()` and `ifelse()` have similar uses: to manipulate variables (recode, categorize, etc.) based on conditions inside dataframes; use them inside dataframes and with tidyverse!
+
+2. Use if / else only outside dataframes and for so-called "flow control" operations (e.g., code executes based on conditions), the slides for today include examples of standard use of if / else statements 

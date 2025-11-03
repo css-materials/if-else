@@ -1,0 +1,67 @@
+---
+title: "conditional statement"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# TASK: Categorize penguins in three categories based on their body mass, and analyze the distribution of different categories.
+
+Load the packages:
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+```
+
+Your Goal: 
+
+Create a new column `mass_category` in the penguins dataset to categorize penguins based on their body mass, using the variable `body_mass_g` variable. If `body_mass_g` is:
+* greater than 5000, label it as "Large"
+* between 4000 and 5000 (inclusive), label it as "Medium"
+* less than 4000, label it as "Small"
+
+Then use `group_by` to group the data by `mass_category` and `summarize()` the average flipper length (variable `flipper_length_mm`) for each mass category.
+
+
+## Answer the prompt using functions we already know: `case_when()`
+
+Use `dplyr` functions `mutate()` and `case_when()` to create the new `mass_category` variable. Once ou are done, rewise the code to add an additional condition to check for missing data in `body_mass_g`, and set them to NA as `NA_Character_` in the new `mass_category` variable
+
+```{r}
+
+```
+
+
+## Answer the prompt using new concepts from today: `ifelse()` function
+
+Remember the syntax from the slides:
+```
+ifelse (condition to be evaluated,
+    action performed when condition is TRUE,
+    action performed when condition is FALSE)
+```
+
+```{r}
+
+```
+
+
+
+## Answer the prompt using using new concepts from today: write a set of `if-else` statements
+
+In this case, at the top of your code you need to use `rowwise()` to make sure your if and else statements apply to a dataframe or, more specifically, to each of single row of the dataframe. In practice, `rowwise()` will force R to process each row individually (e.g., to consider each individual row as its own group). The code works like that:
+
+```{r}
+penguins %>%
+  rowwise() %>%
+  mutate(
+    # add your if and else statements here
+  )
+```
+
+
+```{r}
+
+```
