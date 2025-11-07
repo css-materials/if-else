@@ -1,0 +1,112 @@
+---
+title: "Warm-Up Code"
+output: html_document
+---
+
+### Goal: Observe the syntax and describe what each code example does. Try to predict the output. Then run the code to check your understanding.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(results = "hide")
+```
+
+**Single tests with `if... else`**
+
+Example 1
+```{r}
+age <- 14
+if (age > 16) {
+  print("You can get a driving license")
+} else {
+  print("You cannot drive")
+}
+```
+
+Example 2
+```{r}
+movie_rating <- c(4.5, 4.2, 5.0, 3.8, 2.9, 1.7)
+
+movie_avg_rating <- mean(movie_rating)
+
+if (movie_avg_rating >= 4) {
+  print("This movie is great!")
+} else {
+  print("Not a favorite.")
+}
+```
+
+
+**Multiple tests with `if…, else if…, else`**
+
+Example 3
+```{r}
+x <- 0
+
+if (x > 0) {
+  print("x is positive")
+} else if (x < 0) {
+  print("x is negative")
+} else {
+  print("x is zero")
+}
+```
+
+Example 4
+```{r}
+temperature <- 25
+
+if (temperature >= 30) {
+  weather <- "Hot"
+} else if (temperature >= 20) {
+  weather <- "Cool"
+} else if (temperature >= 10) {
+  weather <- "Breezy"
+} else {
+  weather <- "Freezing"
+}
+
+print(weather)
+```
+
+
+**Nested `if... else` statements**
+
+Example 5 (note the modulo operator `%%` returns the remainder after a division)
+```{r}
+x <- 15
+
+if (x > 0) {
+  if (x %% 2 == 0) {
+    print("x is a positive even number")
+  } else {
+    print("x is a positive odd number")
+  }
+} else {
+  if (x %% 2 == 0) {
+    print("x is a negative even number")
+  } else {
+    print("x is a negative odd number")
+  }
+}
+```
+
+**Vectorized tests with `ifelse()`**
+
+Example 6
+```{r}
+
+ifelse(sqrt(16) > 3, 
+       sqrt(16),
+       0)
+```
+
+
+Example 7
+```{r}
+numbers <- c(10, 6, 7)
+
+ifelse(numbers %% 2 == 1, 
+       "odd",
+       "even")
+```
+
+
