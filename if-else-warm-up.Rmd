@@ -3,11 +3,12 @@ title: "Warm-Up Code"
 output: html_document
 ---
 
-### Goal: Observe the syntax and describe what each code example does. Try to predict the output. Then run the code to check your understanding.
+Observe the syntax and describe what each code example does. Try to predict the output. Then run the code to check your understanding.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(results = "hide")
 ```
+
 
 **Single tests with `if... else`**
 
@@ -70,7 +71,7 @@ print(weather)
 
 **Nested `if... else` statements**
 
-Example 5 (note the modulo operator `%%` returns the remainder after a division)
+Example 5 (the modulo operator `%%` returns the remainder after a division)
 ```{r}
 x <- 15
 
@@ -88,6 +89,7 @@ if (x > 0) {
   }
 }
 ```
+
 
 **Vectorized tests with `ifelse()`**
 
@@ -108,5 +110,4 @@ ifelse(numbers %% 2 == 1,
        "odd",
        "even")
 ```
-
 
